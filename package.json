@@ -1,0 +1,7 @@
+{
+  "name": "trabzon-tarim-stok",
+  "version": "1.0.0",
+  "description": "Trabzon Tarım - Ezme Krema Stok Sistemi (Faz 2)",
+  "scripts": { "start": "node server.js", "test": "node test.js" },
+  "engines": { "node": ">=18" }
+}
