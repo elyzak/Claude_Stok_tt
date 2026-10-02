@@ -1,7 +1,7 @@
 'use strict';
 // ---------- yardımcılar ----------
 const $ = s => document.querySelector(s);
-const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 3 });
+const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 6 });
 const fmt = n => (n === null || n === undefined || n === '') ? '' : nf.format(n);
 const fdate = d => d ? d.slice(8, 10) + '.' + d.slice(5, 7) + '.' + d.slice(0, 4) : '';
 const TZ = 'Europe/Istanbul'; // sunucu tarihiyle aynı iş saat dilimi
@@ -31,7 +31,7 @@ async function api(method, url, body, rid) {
 function toast(msg, err) { const d = h('div', { class: err ? 'err' : '' }, msg); $('#toast').append(d); setTimeout(() => d.remove(), err ? 6000 : 3500); }
 async function run(fn) { try { return await fn(); } catch (e) { toast(e.message, true); } }
 const badge = (t, kind) => h('span', { class: 'badge ' + (kind || '') }, t);
-const statusBadge = s => badge(s, { ONAYLI: 'b-ok', AKTIF: 'b-ok', KABUL: 'b-ok', TASLAK: 'b-warn', TEYIT: 'b-warn', KARANTINA: 'b-warn', PASIF: '', BEKLEME: '', RED: 'b-bad' }[s]);
+const statusBadge = s => badge(s, { ONAYLI: 'b-ok', AKTIF: 'b-ok', KABUL: 'b-ok', TASLAK: 'b-warn', TEYIT: 'b-warn', KARANTINA: 'b-warn', PASIF: '', BEKLEME: '', RED: 'b-bad', KAPALI: '', IPTAL: 'b-bad' }[s]);
 const qtyCell = (q, cls = '') => h('td', { class: 'n ' + cls + (q < 0 ? ' neg' : '') }, fmt(q));
 
 let M = {}; // ana veri
@@ -57,7 +57,8 @@ const page = (...c) => { const m = $('#main'); m.replaceChildren(...c.flat(9)); 
 // ---------- ekranlar ----------
 const VIEWS = {};
 const NAV = [['sec', 'Genel'], ['dashboard', 'Pano'], ['stock', 'Stok durumu'], ['lots', 'Lot stok'], ['sec', 'İşlemler'], ['receipt', 'Mal kabul'], ['production', 'Üretim girişi'], ['dispatch', 'Mamul çıkışı'], ['count', 'Sayım / Devir'],
-  ['sec', 'Tanımlar'], ['recipes', 'Reçeteler'], ['products', 'Ürünler'], ['materials', 'Malzemeler'], ['sec', 'Kayıtlar'], ['docs', 'Belgeler'], ['movements', 'Stok hareketleri']];
+  ['adjust', 'Fire / Lot kapanışı'], ['quality', 'Kalite / Karantina'], ['transfer', 'Lokasyon transferi'],
+  ['sec', 'Tanımlar'], ['recipes', 'Reçeteler'], ['products', 'Ürünler'], ['materials', 'Malzemeler'], ['sec', 'Kayıtlar'], ['trace', 'İzlenebilirlik'], ['docs', 'Belgeler'], ['movements', 'Stok hareketleri']];
 
 VIEWS.dashboard = async () => {
   const d = await api('GET', '/api/dashboard');
@@ -126,9 +127,9 @@ VIEWS.production = async () => {
       const p = await api('POST', '/api/production/preview', b);
       plan = p; snap = b;
       out.replaceChildren(
-        h('div', { class: 'grid' }, [['Toplam kavanoz', fmt(plan.totalJars)], ['Toplam koli', fmt(plan.totalBoxes)], ['Toplam palet', fmt(plan.totalPallets)], ['Dolgu (kg)', fmt(plan.fillKg)], ['Dolgu oranı toplamı', '%' + fmt(plan.ratio)], ['Mamul SKT', fdate(plan.skt)]].map(([t, v]) => h('div', { class: 'stat' }, h('b', {}, v), h('span', {}, t)))),
-        h('p', { class: 'small muted' }, `Reçete: ${plan.recipe.id} (v${plan.recipe.version})`),
-        table([{ h: 'Malzeme', f: r => `${r.code} — ${r.name}` }, { h: 'Birim miktar', n: 1, f: r => fmt(r.perUnit) }, { h: 'Baz', f: r => r.base }, { h: 'Teorik tüketim', n: 1, f: r => fmt(r.need) + ' ' + r.unit }, { h: 'Kullanılabilir', n: 1, f: r => fmt(r.available) }, { h: 'Lot dağılımı (FEFO)', f: r => r.parts.map(x => `${x.lot || '—'}: ${fmt(x.qty)}`).join(', ') }, { h: 'Durum', f: r => badge(r.ok ? 'YETERLİ' : 'YETERSİZ', r.ok ? 'b-ok' : 'b-bad') }], plan.lines),
+        h('div', { class: 'grid' }, [['Toplam kavanoz', fmt(plan.totalJars)], ['Toplam koli', fmt(plan.totalBoxes)], ['Toplam palet', fmt(plan.totalPallets)], ['Dolgu (kg)', fmt(plan.fillKg)], ['Reçete toplamı', plan.ratio == null ? '—' : '%' + fmt(plan.ratio)], ['Mamul SKT', fdate(plan.skt)]].map(([t, v]) => h('div', { class: 'stat' }, h('b', {}, v), h('span', {}, t)))),
+        h('p', { class: 'small muted' }, `Reçete: ${plan.recipe.id} (v${plan.recipe.version}) · reçete toplamı olduğu gibi kullanılır, yuvarlanmaz`),
+        table([{ h: 'Malzeme', f: r => `${r.code} — ${r.name}` }, { h: 'Birim miktar', n: 1, f: r => fmt(r.perUnit) + ' ' + (r.perUnitUnit || '') }, { h: 'Baz', f: r => r.base }, { h: 'Teorik tüketim', n: 1, f: r => fmt(r.need) + ' ' + r.unit }, { h: 'Kullanılabilir', n: 1, f: r => fmt(r.available) }, { h: 'Lot dağılımı (FEFO)', f: r => r.parts.map(x => `${x.lot || '—'}: ${fmt(x.qty)}`).join(', ') }, { h: 'Durum', f: r => badge(r.ok ? 'YETERLİ' : 'YETERSİZ', r.ok ? 'b-ok' : 'b-bad') }], plan.lines),
         h('div', { class: 'row' }, h('button', { disabled: !plan.ok, onclick: () => run(async () => {
           if (!plan || !snap) return toast('Önce önizleme yapın', true);
           const r = await api('POST', '/api/production', { ...snap, expect: { recipeId: plan.recipe.id, totalJars: plan.totalJars, fillKg: plan.fillKg } }, rid);
@@ -181,80 +182,25 @@ VIEWS.count = async () => {
       }) }, 'Kaydet'))));
 };
 
-VIEWS.recipes = async () => {
-  await loadMaster();
-  const q = h('input', { placeholder: 'Ürün ara…' }), box = h('div');
-  const draw = () => {
-    const t = q.value.toLowerCase();
-    const prods = M.products.filter(p => !t || label(mat(p.code)).toLowerCase().includes(t) || p.code.toLowerCase().includes(t));
-    box.replaceChildren(...prods.map(p => { const rs = M.recipes.filter(r => r.productCode === p.code); if (!rs.length) return ''; return h('div', { class: 'card' }, h('b', {}, label(mat(p.code))),
-      table([{ h: 'Reçete', f: r => r.id }, { h: 'Sürüm', f: r => 'v' + r.version }, { h: 'Durum', f: r => statusBadge(r.status) }, { h: 'Onay', f: r => r.qualityApprover ? `${r.qualityApprover} / ${r.productionApprover} (${fdate(r.validFrom)})` : '' }, { h: 'Kalem', n: 1, f: r => r.lines.length }, { h: '', f: r => h('span', {}, h('button', { class: 'sm sec', onclick: () => showRecipe(r) }, 'Aç'), ' ', h('button', { class: 'sm sec', onclick: () => editRecipe(p.code, r) }, 'Yeni sürüm')) }], rs)); }),
-      h('p', { class: 'muted' }, 'Reçeteye sahip olmayan bir ürün için yeni reçete: Ürünler ekranından değil, buradaki "Yeni reçete" ile.'));
-  };
-  q.addEventListener('input', draw); draw();
-  const prodSel = sel(M.products.map(p => [p.code, label(mat(p.code))]), 'MM-001');
-  page(head('Reçeteler', 'Reçete üzerine yazılmaz; değişiklik yeni sürüm olur. Bir ürün için aynı anda tek ONAYLI reçete olur.'), h('div', { class: 'tools' }, q, prodSel, h('button', { onclick: () => editRecipe(prodSel.value, null) }, 'Yeni reçete')), box);
-};
-function showRecipe(r) {
-  const approve = r.status === 'TASLAK' ? [h('h2', {}, 'Onay'), h('div', { class: 'form' }, field('Kalite onaylayan', h('input', { id: 'qa' })), field('Üretim onaylayan', h('input', { id: 'pa' })), h('button', { onclick: () => run(async () => { await api('POST', `/api/recipes/${r.id}/approve`, { quality: $('#qa').value, production: $('#pa').value }); toast('Reçete onaylandı; önceki onaylı sürüm pasife alındı'); VIEWS.recipes(); }) }, 'Onayla'))] : '';
-  page(head(`${r.id}`, `${label(mat(r.productCode))} · v${r.version} · ${r.status}`), h('p', {}, r.description),
-    table([{ h: 'Malzeme', f: l => label(mat(l.material)) }, { h: 'Miktar', n: 1, f: l => fmt(l.qty) }, { h: 'Hesap bazı', f: l => l.base }, { h: 'Fire %', n: 1, f: l => fmt(l.fire * 100) }, { h: 'Yuvarlama', f: l => l.rounding }, { h: 'Kritik tartım', f: l => l.critical ? 'EVET' : '' }], r.lines),
-    approve, h('div', { class: 'row' }, h('button', { class: 'sec', onclick: () => VIEWS.recipes() }, '← Geri')));
-}
-function editRecipe(code, from) {
-  const rows = []; const tbody = h('tbody'); let n = 0;
-  const add = (l) => {
-    const mi = matInput(['HAMMADDE', 'YARI_MAMUL', 'AMBALAJ'], 'dl-r' + (n++)); if (l) mi.input.value = label(mat(l.material));
-    const r = { mi, qty: h('input', { type: 'number', step: 'any', value: l ? l.qty : '' }), base: sel(['KG_DOLGU', 'KAVANOZ', 'KOLI', 'PALET'], l ? l.base : 'KG_DOLGU'), fire: h('input', { type: 'number', step: 'any', value: l ? l.fire * 100 : 0 }), rounding: sel(['YOK', 'YUKARI'], l ? l.rounding : 'YOK'), critical: h('input', { type: 'checkbox', checked: l ? l.critical : false, style: 'width:auto' }) };
-    const tr = h('tr', {}, h('td', {}, mi.el), h('td', {}, r.qty), h('td', {}, r.base), h('td', {}, r.fire), h('td', {}, r.rounding), h('td', {}, r.critical), h('td', {}, h('button', { class: 'sm danger', onclick: () => { tr.remove(); rows.splice(rows.indexOf(r), 1); } }, '✕')));
-    rows.push(r); tbody.append(tr);
-  };
-  (from ? from.lines : [null]).forEach(add);
-  const desc = h('input', { value: from ? from.description : '' });
-  page(head('Reçete taslağı', label(mat(code)) + (from ? ` — ${from.id} esas alınarak yeni sürüm` : '')),
-    h('div', { class: 'card' }, field('Açıklama', desc), h('div', { class: 'tw', style: 'margin-top:12px;max-height:none' }, h('table', {}, h('thead', {}, h('tr', {}, ['Malzeme', 'Miktar (KG_DOLGU için kg/kg, örn. 0,4 = %40)', 'Hesap bazı', 'Fire %', 'Yuvarlama', 'Kritik', ''].map(t => h('th', {}, t)))), tbody)),
-      h('div', { class: 'row' }, h('button', { class: 'sec', onclick: () => add(null) }, '+ Kalem'), h('button', { onclick: () => run(async () => { const r = await api('POST', '/api/recipes', { productCode: code, description: desc.value, lines: rows.filter(x => x.mi.code).map(x => ({ material: x.mi.code, qty: x.qty.value, base: x.base.value, fire: x.fire.value, rounding: x.rounding.value, critical: x.critical.checked })) }); toast(`${r.id} TASLAK olarak kaydedildi`); VIEWS.recipes(); }) }, 'Taslak olarak kaydet'), h('button', { class: 'sec', onclick: () => VIEWS.recipes() }, 'Vazgeç'))));
-}
-
-VIEWS.products = async () => {
-  await loadMaster();
-  const q = h('input', { placeholder: 'Ara…' }), box = h('div');
-  const draw = () => {
-    const t = q.value.toLowerCase();
-    const mk = (p, k, w = 70) => { const i = h('input', { type: 'number', value: p[k] ?? '', style: `width:${w}px` }); i.addEventListener('change', () => run(async () => { await api('PUT', `/api/products/${p.code}`, { [k]: i.value }); Object.assign(p, { [k]: i.value === '' ? null : Number(i.value) }); toast('Kaydedildi'); })); return i; };
-    const st = p => { const s = sel(['AKTIF', 'TEYIT', 'BEKLEME', 'PASIF'], p.status); s.addEventListener('change', () => run(async () => { await api('PUT', `/api/products/${p.code}`, { status: s.value }); p.status = s.value; toast('Kaydedildi'); })); return s; };
-    box.replaceChildren(table([{ h: 'Kod', f: p => p.code }, { h: 'Yeni kod', f: p => p.newCode }, { h: 'Ürün', f: p => mat(p.code).name }, { h: 'Nominal g', f: p => mk(p, 'nominal') }, { h: 'Hedef dolum g', f: p => mk(p, 'targetFill') }, { h: 'Kavanoz/koli', f: p => mk(p, 'jarsPerBox') }, { h: 'Koli/palet', f: p => mk(p, 'boxesPerPallet') }, { h: 'Raf ömrü gün', f: p => mk(p, 'shelfLifeDays', 80) }, { h: 'Durum', f: st }, { h: 'Onaylı reçete', f: p => { const r = M.recipes.find(x => x.productCode === p.code && x.status === 'ONAYLI'); return r ? badge('v' + r.version, 'b-ok') : badge('yok'); } }], M.products.filter(p => !t || (p.code + mat(p.code).name).toLowerCase().includes(t))));
-  };
-  q.addEventListener('input', draw); draw();
-  const nm = h('input', { placeholder: 'Yeni ürün adı' }), brand = sel(['', 'Baynut', 'Trabzon Tarım', 'Nutshell'], '');
-  page(head('Ürün kartları', 'Üretim/sevk hesapları için hedef dolum, koli ve palet dizilimi dolu olmalıdır. Hücreyi değiştirince otomatik kaydedilir.'), h('div', { class: 'tools' }, q, nm, brand, h('button', { class: 'sec', onclick: () => run(async () => { const m = await api('POST', '/api/materials', { name: nm.value, type: 'MAMUL', unit: 'ADET', category: 'Ezme ve krema', brand: brand.value }); toast(m.code + ' oluşturuldu'); VIEWS.products(); }) }, '+ Yeni ürün')), box);
-};
-
-VIEWS.materials = async () => {
-  await loadMaster();
-  const type = sel([['', 'Tüm tipler'], 'HAMMADDE', 'AMBALAJ', 'YARI_MAMUL', 'MAMUL'], ''), q = h('input', { placeholder: 'Ara…' }), box = h('div');
-  const draw = () => { const t = q.value.toLowerCase(); box.replaceChildren(table([{ h: 'Kod', f: m => m.code }, { h: 'Ad', f: m => m.name }, { h: 'Tip', f: m => m.type }, { h: 'Birim', f: m => m.unit }, { h: 'Kategori', f: m => m.category }, { h: 'Lot', f: m => m.lotTracking }, { h: 'SKT', f: m => m.sktTracking ? 'EVET' : 'HAYIR' }, { h: 'Alerjen', f: m => m.allergens },
-    { h: 'Min. stok', f: m => { const i = h('input', { type: 'number', value: m.minStock ?? '', style: 'width:90px' }); i.addEventListener('change', () => run(async () => { await api('PUT', `/api/materials/${m.code}`, { minStock: i.value }); m.minStock = i.value === '' ? null : Number(i.value); toast('Kaydedildi'); })); return i; } }], M.materials.filter(m => (!type.value || m.type === type.value) && (!t || label(m).toLowerCase().includes(t))))); };
-  [type, q].forEach(e => e.addEventListener('input', draw)); draw();
-  const f = { name: h('input'), type: sel(['HAMMADDE', 'AMBALAJ', 'YARI_MAMUL'], 'HAMMADDE'), unit: sel(['KG', 'ADET'], 'KG'), cat: h('input', { placeholder: 'Kategori' }), al: h('input', { placeholder: 'Alerjenler' }) };
-  page(head('Malzeme kartları', 'Kod sistem tarafından üretilir.'), h('div', { class: 'card' }, h('b', {}, 'Yeni malzeme'), h('div', { class: 'form', style: 'margin-top:8px' }, field('Ad', f.name), field('Tip', f.type), field('Birim', f.unit), field('Kategori', f.cat), field('Alerjenler', f.al), h('button', { onclick: () => run(async () => { const m = await api('POST', '/api/materials', { name: f.name.value, type: f.type.value, unit: f.unit.value, category: f.cat.value, allergens: f.al.value, lotTracking: f.type.value === 'AMBALAJ' ? 'OPSIYONEL' : 'ZORUNLU' }); toast(m.code + ' oluşturuldu'); VIEWS.materials(); }) }, 'Ekle'))), h('div', { class: 'tools' }, type, q), box);
-};
-
 function movTable(rows) {
   return table([{ h: 'Zaman', f: r => fts(r.ts) }, { h: 'Tür', f: r => r.type }, { h: 'Malzeme', f: r => { const m = mat(r.code); return `${r.code} ${m ? m.name : ''}`; } }, { h: 'Lot', f: r => r.lot }, { h: 'Lokasyon', f: r => r.loc }, { h: 'Miktar', n: 1, f: r => h('span', { class: r.qty < 0 ? 'neg' : 'pos' }, fmt(r.qty)) }, { h: 'Belge', f: r => r.docId }, { h: 'Neden', f: r => r.reason }, { h: 'Not', f: r => r.note }], rows, { empty: 'Henüz hareket yok' });
 }
 VIEWS.movements = async () => { const d = await api('GET', '/api/movements'); page(head('Stok hareketleri', 'Değişmez defter. Hatalar belge iptaliyle ters kayıt olarak düzeltilir (son 1000 hareket).'), movTable(d.rows)); };
 
 VIEWS.docs = async () => {
-  const kind = sel([['receipts', 'Mal kabuller'], ['productions', 'Üretimler'], ['dispatches', 'Mamul çıkışları'], ['counts', 'Sayım / devir']], 'productions'); const box = h('div');
+  const kind = sel([['receipts', 'Mal kabuller'], ['productions', 'Üretimler'], ['dispatches', 'Mamul çıkışları'], ['counts', 'Sayım / devir'], ['fires', 'Fire'], ['lotclosures', 'Lot kapanışları'], ['transfers', 'Transferler'], ['quality', 'Kalite kararları']], 'productions'); const box = h('div');
   const cancel = d => h('span', {}, d.cancelled ? badge('İPTAL', 'b-bad') : h('button', { class: 'sm danger', onclick: () => { const r = prompt(`${d.id} iptal nedeni?`); if (r) run(async () => { await api('POST', `/api/cancel/${d.id}`, { reason: r }, newRid()); toast('İptal edildi (ters kayıt)'); draw(); }); } }, 'İptal et'));
   const draw = async () => {
     const d = await api('GET', '/api/docs/' + kind.value); const k = kind.value; const nm = c => { const m = mat(c); return m ? `${c} ${m.name}` : c; };
     const cols = { receipts: [{ h: 'No', f: r => r.id }, { h: 'Tarih', f: r => fdate(r.date) }, { h: 'Malzeme', f: r => nm(r.code) }, { h: 'Miktar', n: 1, f: r => fmt(r.qty) }, { h: 'Lot', f: r => r.lot }, { h: 'SKT', f: r => fdate(r.skt) }, { h: 'Sonuç', f: r => statusBadge(r.result) }, { h: 'Tedarikçi', f: r => r.supplier }, { h: 'Fiyat', f: r => r.unitPrice != null ? `${fmt(r.unitPrice)} ${r.currency}` : '' }],
       productions: [{ h: 'No', f: r => r.id }, { h: 'Tarih', f: r => fdate(r.date) }, { h: 'Ürün', f: r => nm(r.productCode) }, { h: 'Kavanoz', n: 1, f: r => fmt(r.totalJars) }, { h: 'Dolgu kg', n: 1, f: r => fmt(r.fillKg) }, { h: 'Mamul lot', f: r => r.lot }, { h: 'Reçete', f: r => r.recipeId }, { h: 'SKT', f: r => fdate(r.skt) }],
       dispatches: [{ h: 'No', f: r => r.id }, { h: 'Tarih', f: r => fdate(r.date) }, { h: 'Tür', f: r => r.type }, { h: 'Ürün', f: r => nm(r.productCode) }, { h: 'Adet', n: 1, f: r => fmt(r.jars) }, { h: 'Lotlar', f: r => r.lots }, { h: 'Belge no', f: r => r.docNo }],
-      counts: [{ h: 'No', f: r => r.id }, { h: 'Tarih', f: r => fdate(r.date) }, { h: 'Tip', f: r => r.type }, { h: 'Sayan', f: r => r.counter }, { h: 'Satır', n: 1, f: r => r.lines.length }, { h: 'Fark toplamı', n: 1, f: r => fmt(r.lines.reduce((s, l) => s + (l.diff || 0), 0)) }] }[k];
-    box.replaceChildren(table([...cols, { h: 'Kaydeden', f: r => r.user }, { h: '', f: cancel }], d.rows));
+      counts: [{ h: 'No', f: r => r.id }, { h: 'Tarih', f: r => fdate(r.date) }, { h: 'Tip', f: r => r.type }, { h: 'Sayan', f: r => r.counter }, { h: 'Satır', n: 1, f: r => r.lines.length }, { h: 'Fark toplamı', n: 1, f: r => fmt(r.lines.reduce((s, l) => s + (l.diff || 0), 0)) }],
+      fires: [{ h: 'No', f: r => r.id }, { h: 'Zaman', f: r => fts(r.ts) }, { h: 'Malzeme', f: r => nm(r.code) }, { h: 'Miktar', n: 1, f: r => fmt(r.qty) }, { h: 'Neden', f: r => r.reason }, { h: 'Üretim', f: r => r.productionId }, { h: 'Lotlar', f: r => r.lots }],
+      lotclosures: [{ h: 'No', f: r => r.id }, { h: 'Zaman', f: r => fts(r.ts) }, { h: 'Malzeme', f: r => nm(r.code) }, { h: 'Lot', f: r => r.lot }, { h: 'Sistem', n: 1, f: r => fmt(r.system) }, { h: 'Fiziksel', n: 1, f: r => fmt(r.actual) }, { h: 'Fark', n: 1, f: r => h('span', { class: r.diff < 0 ? 'neg' : 'pos' }, fmt(r.diff)) }, { h: 'Neden', f: r => r.reason }, { h: 'Kapatıldı', f: r => r.closed ? 'EVET' : '' }],
+      transfers: [{ h: 'No', f: r => r.id }, { h: 'Zaman', f: r => fts(r.ts) }, { h: 'Malzeme', f: r => nm(r.code) }, { h: 'Lot', f: r => r.lot }, { h: 'Kaynak', f: r => r.from }, { h: 'Hedef', f: r => r.to }, { h: 'Miktar', n: 1, f: r => fmt(r.qty) }],
+      quality: [{ h: 'No', f: r => r.id }, { h: 'Zaman', f: r => fts(r.ts) }, { h: 'Karar', f: r => r.action }, { h: 'Malzeme', f: r => nm(r.code) }, { h: 'Lot', f: r => r.lot }, { h: 'Miktar', n: 1, f: r => fmt(r.qty) }, { h: 'Karar veren', f: r => r.decidedBy }, { h: 'Not', f: r => r.note }] }[k];
+    box.replaceChildren(table([...cols, { h: 'Kaydeden', f: r => r.user }, { h: '', f: r => k === 'quality' ? '' : cancel(r) }], d.rows));
   };
   kind.addEventListener('change', draw); draw();
   page(head('Belgeler', 'Belge iptali, ters hareket üretir; sonraki işlemlerle stok kullanılmışsa iptal engellenir.'), h('div', { class: 'tools' }, kind), box);

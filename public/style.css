@@ -36,3 +36,4 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 #toast div{padding:10px 14px;border-radius:8px;color:#fff;background:var(--ok);box-shadow:0 4px 14px #0003;max-width:420px}#toast div.err{background:var(--bad)}
 .muted{color:var(--mute)}.small{font-size:12px}
 @media(max-width:800px){body{flex-direction:column}#side{width:100%;height:auto;position:static}#nav{display:flex;overflow:auto;white-space:nowrap}#nav .sec{display:none}main{padding:14px}}
+input.miss{border-color:#d33;background:#fff4f2}
