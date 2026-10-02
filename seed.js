@@ -222,8 +222,10 @@ function build() {
   const brandOf = {}; mapping.forEach(m => brandOf[m.oldCode] = m.brand);
   products.forEach(p => { p.brand = brandOf[p.code] || (materials.find(m => m.code === p.code).name.startsWith('Nutshell') ? 'Nutshell' : ''); p.newCode = (mapping.find(m => m.oldCode === p.code) || {}).newCode || ''; });
 
+  // Reçeteler bilerek BOŞ: Sheet'teki eski test reçeteleri data-archive/ altında arşivlendi, uygulama temiz başlar.
+  // Gerçek reçeteler kullanıcı tarafından Reçeteler ekranından girilecek.
   return {
-    materials, products, recipes,
+    materials, products, recipes: [],
     locations: [
       { code: 'EZM-DEPO', name: 'Ezme Bölümü Deposu', type: 'DEPO' }, { code: 'EZM-HAT1', name: 'Hat 1', type: 'HAT' },
       { code: 'EZM-KAR', name: 'Karantina', type: 'KARANTINA' }, { code: 'ANA-DEPO', name: 'Ana Depo (sistem dışı)', type: 'SANAL' },
@@ -239,6 +241,7 @@ function build() {
     ].map(([code, category, desc]) => ({ code, category, desc })),
     users: [{ email: 'sales@trabzontarim.com.tr', name: 'Sistem Yöneticisi', role: 'ADMIN', active: true }],
     mapping,
+    lots: {}, movements: [], receipts: [], productions: [], dispatches: [], counts: [], seq: {},
   };
 }
 module.exports = { build };

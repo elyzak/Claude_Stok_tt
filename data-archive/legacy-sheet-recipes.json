@@ -1,0 +1,633 @@
+{
+ "_not": "Sheet'ten gelen ESKİ TEST/taslak reçeteler. GERÇEK REÇETE DEĞİLDİR; uygulama bunları yüklemez. Yalnızca arşiv.",
+ "recipes": [
+  {
+   "id": "REC-MM001-V1",
+   "productCode": "MM-001",
+   "version": 1,
+   "status": "PASIF",
+   "description": "Etiketteki içindekilerden. Fındık %40 ve kakao %7 biliniyor, diğer oranlar üretim reçetesinden girilecek.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-001",
+     "qty": 0.4,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-003",
+     "qty": 0.07,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-003",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM002-V1",
+   "productCode": "MM-002",
+   "version": 1,
+   "status": "TASLAK",
+   "description": "Etiketteki içindekilerden (%100 yer fıstığı). Kalite onayı bekliyor.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-004",
+     "qty": 1,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-004",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM003-V1",
+   "productCode": "MM-003",
+   "version": 1,
+   "status": "TASLAK",
+   "description": "Etiketteki içindekilerden (fındık %70, hurma %30). Kalite onayı bekliyor.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-001",
+     "qty": 0.7,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-002",
+     "qty": 0.3,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-005",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM004-V1",
+   "productCode": "MM-004",
+   "version": 1,
+   "status": "TASLAK",
+   "description": "Etiketteki içindekilerden (fıstık %70, hurma %30). Kalite onayı bekliyor.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-004",
+     "qty": 0.7,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-002",
+     "qty": 0.3,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-006",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM005-V1",
+   "productCode": "MM-005",
+   "version": 1,
+   "status": "TASLAK",
+   "description": "Etiketteki içindekilerden. Fındık %33 ve kakao %7 biliniyor, diğer oranlar üretim reçetesinden girilecek. Parçacıkların ayrı bir hammadde (kıyılmış fındık) olup olmadığı teyit edilecek.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-001",
+     "qty": 0.33,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-003",
+     "qty": 0.07,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-007",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM006-V1",
+   "productCode": "MM-006",
+   "version": 1,
+   "status": "TASLAK",
+   "description": "Etiketteki içindekilerden. Fıstık %40 ve kakao %7 biliniyor, diğer oranlar üretim reçetesinden girilecek.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-004",
+     "qty": 0.4,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-003",
+     "qty": 0.07,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-001",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-002",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-008",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-009",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-010",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-012",
+     "qty": 0,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": "REC-MM001-V2-GECICI",
+   "productCode": "MM-001",
+   "version": 2,
+   "status": "ONAYLI",
+   "description": "ASIL REÇETE: Baynut Hurmalı Kakaolu Fındık Kreması. Kullanıcının verdiği üretim reçetesi; toplam %100.",
+   "qualityApprover": "",
+   "productionApprover": "",
+   "validFrom": "",
+   "lines": [
+    {
+     "material": "HM-025",
+     "qty": 0.4,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-026",
+     "qty": 0.06,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-027",
+     "qty": 0.13,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-028",
+     "qty": 0.05,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-006",
+     "qty": 0.1,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-031",
+     "qty": 0.03,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-030",
+     "qty": 0.038,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-009",
+     "qty": 0.006,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "HM-008",
+     "qty": 0.186,
+     "base": "KG_DOLGU",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": true
+    },
+    {
+     "material": "AM-070",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-071",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-036",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-003",
+     "qty": 1,
+     "base": "KAVANOZ",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-072",
+     "qty": 1,
+     "base": "KOLI",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    },
+    {
+     "material": "AM-011",
+     "qty": 1,
+     "base": "PALET",
+     "fire": 0,
+     "rounding": "YOK",
+     "critical": false
+    }
+   ]
+  }
+ ]
+}
